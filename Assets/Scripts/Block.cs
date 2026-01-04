@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -87,6 +88,7 @@ public class Block : MonoBehaviour
 
         currentDragPoint = Vector2Int.RoundToInt((Vector2)transform.position - center);
         board.Hover(currentDragPoint,polyominoIndex);
+        Highlight(board.HighlightPolyominoColumns, board.HighlightPolyominoRows);
         previousDragPoint = currentDragPoint;
 
         previousMousePosition = Input.mousePosition;
@@ -107,6 +109,7 @@ public class Block : MonoBehaviour
             {
                 previousDragPoint = currentDragPoint;
                 board.Hover(currentDragPoint,polyominoIndex);
+                Highlight(board.HighlightPolyominoColumns, board.HighlightPolyominoRows);
             }
         }
     }
@@ -127,4 +130,57 @@ public class Block : MonoBehaviour
 
     }
 
+    private void Highlight(List<int> columns, List <int> rows)
+    {
+        var polyomino = Polyominos.Get(polyominoIndex);
+        var polyominoRows = polyomino.GetLength(0);
+        var polyominoColumns = polyomino.GetLength(1);
+
+        Unhighlight(polyominoColumns, polyominoRows, polyomino);
+
+        HighlightColumns(polyominoRows, polyomino, columns);
+        HighlightRows(polyominoColumns, polyomino, rows);
+    }
+
+    private void Unhighlight(int polyominoColumns, int polyominoRows, int[,] polyomino)
+    {
+        for(var r=0; r<polyominoRows; ++r)
+        {
+            for(var c= 0; c< polyominoColumns; ++c)
+            {
+                if(polyomino[r, c]> 0)
+                {
+                    cells[r,c].Normal();
+                }
+            }
+        }
+    }
+
+    private void HighlightColumns(int polyominoRows, int[,] polyomino, List <int> columns)
+    {
+        foreach(var c in columns)
+        {
+            for(var r= 0; r< polyominoRows; ++r)
+            {
+                if(polyomino[r, c]> 0)
+                {
+                    cells[r,c].Highlight();
+                }
+            }
+        }
+    }
+
+    private void HighlightRows(int polyominoColumns, int[,] polyomino, List <int> rows)
+    {
+        foreach(var r in rows)
+        {
+            for(var c= 0; c< polyominoColumns; ++c)
+            {
+                if(polyomino[r, c]> 0)
+                {
+                    cells[r,c].Highlight();
+                }
+            }
+        }
+    }
 }

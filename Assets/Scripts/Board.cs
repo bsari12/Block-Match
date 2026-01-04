@@ -17,6 +17,9 @@ public class Board : MonoBehaviour
     private readonly List<int> fullLineColumns = new();
     private readonly List<int> fullLineRows = new();
 
+    private readonly List<int> highlightPolyominoColumns = new();
+    private readonly List<int> highlightPolyominoRows = new();
+
     void Start()
     {
         for(var r = 0; r< Size; ++r)
@@ -37,12 +40,30 @@ public class Board : MonoBehaviour
         var polyominoColumns = polyomino.GetLength(1);
 
         Unhover();
+        Unhighlight();
+
+        highlightPolyominoColumns.Clear();
+        highlightPolyominoRows.Clear();
+
         HoverPoints(point, polyominoRows, polyominoColumns, polyomino);
+
         if(hoverPoints.Count > 0)
         {
             Hover();
+            Highlight(point, polyominoColumns,polyominoRows);
+
+            foreach(var fullLineColumn in fullLineColumns)
+            {
+                highlightPolyominoColumns.Add(fullLineColumn - point.x);
+            }
+            foreach(var fullLineRow in fullLineRows)
+            {
+                highlightPolyominoRows.Add(fullLineRow - point.y);
+            }
         }
     }
+
+    
 
     private void HoverPoints(Vector2Int point, int polyominoRows, int polyominoColumns, int [,] polyomino)
     {
@@ -195,4 +216,119 @@ public class Board : MonoBehaviour
             }
         }
     }
+
+    private void Highlight(Vector2Int point, int polyominoColumns, int polyominoRows)
+    {
+        PredictFullLineColumns(point.x, point.x + polyominoColumns);
+        PredictFullLineRows(point.y, point.y + polyominoRows);
+
+        HighlightFullLineColumns();
+        HighlightFullLineRows();
+    }
+
+    private void Unhighlight()
+    {
+        UnhighlightFullLineColumns();
+        UnhighlightFullLineRows();
+    }
+
+    private void PredictFullLineColumns(int fromColumn, int toColumnExclusive)
+    {
+        fullLineColumns.Clear();
+        for(var c = fromColumn; c< toColumnExclusive; ++c)
+        {
+            var isFullLine = true;
+            for(var r =0; r<Size; ++r)
+            {
+                if(data[r, c] != 1 && data[r, c] != 2)
+                {
+                    isFullLine = false;
+                    break;
+                }
+            }
+            if (isFullLine == true)
+            {
+                fullLineColumns.Add(c);
+            }
+        }
+    }
+
+    private void PredictFullLineRows(int fromRow, int toRowExclusive)
+    {
+        fullLineRows.Clear();
+        for(var r = fromRow; r< toRowExclusive; ++r)
+        {
+            var isFullLine = true;
+            for(var c =0; c<Size; ++c)
+            {
+                if(data[r, c] != 1 && data[r, c] != 2)
+                {
+                    isFullLine = false;
+                    break;
+                }
+            }
+            if (isFullLine == true)
+            {
+                fullLineRows.Add(r);
+            }
+        }
+    }
+
+    private void HighlightFullLineColumns()
+    {
+        foreach(var c in fullLineColumns)
+        {
+            for(var r=0; r<Size; ++r)
+            {
+                if(data[r, c]==2)
+                {
+                    cells[r, c].Highlight();
+                }
+            }
+        }
+    }
+    private void HighlightFullLineRows()
+    {
+        foreach(var r in fullLineRows)
+        {
+            for(var c=0; c<Size; ++c)
+            {
+                if(data[r, c]==2)
+                {
+                    cells[r, c].Highlight();
+                }
+            }
+        }
+    }
+
+
+    private void UnhighlightFullLineColumns()
+    {
+        foreach(var c in fullLineColumns)
+        {
+            for(var r=0; r<Size; ++r)
+            {
+                if(data[r, c]==2)
+                {
+                    cells[r, c].Normal();
+                }
+            }
+        }
+    }
+    private void UnhighlightFullLineRows()
+    {
+        foreach(var r in fullLineRows)
+        {
+            for(var c=0; c<Size; ++c)
+            {
+                if(data[r, c]==2)
+                {
+                    cells[r, c].Normal();
+                }
+            }
+        }
+    }
+
+    public List<int> HighlightPolyominoColumns => highlightPolyominoColumns;
+    public List<int> HighlightPolyominoRows => highlightPolyominoRows;
 }
