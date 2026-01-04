@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1547378414}
     m_Modifications:
+    - target: {fileID: 5182499389806764561, guid: 1be15268cf8c2e9428257d543b6021d6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5792286769298947088, guid: 1be15268cf8c2e9428257d543b6021d6, type: 3}
       propertyPath: board
       value: 
@@ -529,6 +533,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1547378414}
     m_Modifications:
+    - target: {fileID: 5182499389806764561, guid: 1be15268cf8c2e9428257d543b6021d6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5792286769298947088, guid: 1be15268cf8c2e9428257d543b6021d6, type: 3}
       propertyPath: board
       value: 

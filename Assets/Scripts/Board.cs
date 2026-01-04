@@ -20,6 +20,9 @@ public class Board : MonoBehaviour
     private readonly List<int> highlightPolyominoColumns = new();
     private readonly List<int> highlightPolyominoRows = new();
 
+    private Vector2Int previousHoverPoint;
+    private readonly List<Vector2Int> previousHoverPoints = new();
+
     void Start()
     {
         for(var r = 0; r< Size; ++r)
@@ -49,17 +52,25 @@ public class Board : MonoBehaviour
 
         if(hoverPoints.Count > 0)
         {
+            previousHoverPoint = point;
+            previousHoverPoints.Clear();
+            previousHoverPoints.AddRange(hoverPoints);
+
             Hover();
             Highlight(point, polyominoColumns,polyominoRows);
+        }
+        else if(previousHoverPoints.Count > 0 && Mathf.Abs(point.x - previousHoverPoint.x) <2 && Mathf.Abs(point.y - previousHoverPoint.y) <2)
+        {
+            point = previousHoverPoint;
+            hoverPoints.Clear();
+            hoverPoints.AddRange(previousHoverPoints);
 
-            foreach(var fullLineColumn in fullLineColumns)
-            {
-                highlightPolyominoColumns.Add(fullLineColumn - point.x);
-            }
-            foreach(var fullLineRow in fullLineRows)
-            {
-                highlightPolyominoRows.Add(fullLineRow - point.y);
-            }
+            Hover();
+            Highlight(point, polyominoColumns,polyominoRows);
+        }
+        else
+        {
+            previousHoverPoints.Clear();
         }
     }
 
@@ -124,9 +135,22 @@ public class Board : MonoBehaviour
         if(hoverPoints.Count > 0)
         {
             Place(point, polyominoColumns, polyominoRows);
+
+            previousHoverPoints.Clear();
             return true;
         }
+        else if(previousHoverPoints.Count > 0 && Mathf.Abs(point.x - previousHoverPoint.x) <2 && Mathf.Abs(point.y - previousHoverPoint.y) <2)
+        {
+            point = previousHoverPoint;
+            hoverPoints.Clear();
+            hoverPoints.AddRange(previousHoverPoints);
 
+            Place(point, polyominoColumns, polyominoRows);
+
+            previousHoverPoints.Clear();
+            return true;
+        }
+        previousHoverPoints.Clear();
         return false;
     }
 
@@ -224,6 +248,15 @@ public class Board : MonoBehaviour
 
         HighlightFullLineColumns();
         HighlightFullLineRows();
+
+        foreach(var fullLineColumn in fullLineColumns)
+        {
+            highlightPolyominoColumns.Add(fullLineColumn - point.x);
+        }
+        foreach(var fullLineRow in fullLineRows)
+        {
+            highlightPolyominoRows.Add(fullLineRow - point.y);
+        }
     }
 
     private void Unhighlight()

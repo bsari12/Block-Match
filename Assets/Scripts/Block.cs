@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Block : MonoBehaviour
 {
@@ -8,6 +10,8 @@ public class Block : MonoBehaviour
     [SerializeField] private Board board;
     [SerializeField] private Blocks blocks;
     [SerializeField] private Cell cellPrefab;
+
+    private SortingGroup sortingGroup;
 
     private int polyominoIndex;
 
@@ -29,8 +33,10 @@ public class Block : MonoBehaviour
 
     void Awake()
     {
+        sortingGroup = gameObject.GetComponent<SortingGroup>();
         mainCamera = Camera.main;
     }
+
     public void Initialize()
     {
         for(var r = 0; r< Size; ++r)
@@ -85,6 +91,10 @@ public class Block : MonoBehaviour
 
         transform.localPosition = position + inputOffset;
         transform.localScale = Vector3.one;
+
+        blocks.ResetBlocksSortingOrders();
+        SetSortingGOrder(1);
+
 
         currentDragPoint = Vector2Int.RoundToInt((Vector2)transform.position - center);
         board.Hover(currentDragPoint,polyominoIndex);
@@ -182,5 +192,10 @@ public class Block : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetSortingGOrder(int sortingOrder)
+    {
+        sortingGroup.sortingOrder = sortingOrder;
     }
 }
