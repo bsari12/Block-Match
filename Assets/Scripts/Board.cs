@@ -329,6 +329,40 @@ public class Board : MonoBehaviour
         }
     }
 
+    public bool CheckPlace(int polyominoIndex)
+    {
+        var polyomino = Polyominos.Get(polyominoIndex);
+        var polyominoRows = polyomino.GetLength(0);
+        var polyominoColumns = polyomino.GetLength(1);
+
+        for (var r = 0; r< Size; ++r)
+        {
+            for (var c = 0; c< Size - polyominoColumns; ++c)
+            {
+                if(CheckPlace(c,r,polyominoColumns,polyominoRows,polyomino)==true)
+                {
+                    return true;                
+                }
+            }
+        }
+        return false;
+    }
+
+    private bool CheckPlace(int column, int row, int polyominoColumns, int polyominoRows, int[,] polyomino)
+    {
+        for (var r = 0; r< polyominoRows; ++r)
+        {
+            for (var c = 0; c< polyominoColumns; ++c)
+            {
+                if(polyomino[r, c]> 0 && data[row+ r, column + c]==2)
+                {
+                    return false;                
+                }
+            }
+        }
+        return true;
+    }
+
     public List<int> HighlightPolyominoColumns => highlightPolyominoColumns;
     public List<int> HighlightPolyominoRows => highlightPolyominoRows;
 }

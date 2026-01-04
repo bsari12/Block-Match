@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class Blocks : MonoBehaviour
 {
+    [SerializeField] Board board;
     [SerializeField] private Block[] blocks;
+    private int[] polyominoIndexes;
     private int blockCount = 0;
 
     private void Start()
@@ -18,6 +20,8 @@ public class Blocks : MonoBehaviour
 
         }
 
+        polyominoIndexes = new int[blocks.Length];
+
         Generate();
     }
 
@@ -25,8 +29,9 @@ public class Blocks : MonoBehaviour
     {
         for(var i = 0; i< blocks.Length; ++i)
         {
+            polyominoIndexes[i] = Random.Range(0, Polyominos.Length);
             blocks[i].gameObject.SetActive(true);
-            blocks[i].Show(Random.Range(0, Polyominos.Length));
+            blocks[i].Show(polyominoIndexes[i]);
             
             ++ blockCount;
         }
@@ -39,6 +44,20 @@ public class Blocks : MonoBehaviour
         {
             blockCount=0;
             Generate();
+        }
+
+        var lose = true;
+        for(var i=0; i< blocks.Length; ++i)
+        {
+            if(blocks[i].gameObject.activeSelf == true && board.CheckPlace(polyominoIndexes[i]) == true)
+            {
+                lose = false;
+                break;
+            }
+        }
+        if(lose == true)
+        {
+            Debug.Log("Lost");
         }
     }
 }
