@@ -30,7 +30,7 @@ public class Cell : MonoBehaviour
     public void Hover()
     {
         gameObject.SetActive(true);
-        spriteRenderer.color = new(1.0f, 1.0f, 0.5f);
+        spriteRenderer.color = new(1.0f, 1.0f, 1.0f, 0.5f);
         spriteRenderer.sprite = normal;
     }
 
