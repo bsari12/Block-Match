@@ -4,7 +4,10 @@ public class Block : MonoBehaviour
 {
     public const int Size = 5;
 
+    [SerializeField] private Board board;
     [SerializeField] private Cell cellPrefab;
+
+    private int polyominoIndex;
 
     private readonly Cell[,] cells = new Cell[Size, Size];
 
@@ -42,6 +45,7 @@ public class Block : MonoBehaviour
 
     public void Show(int polyominoIndex)
     {
+        this.polyominoIndex = polyominoIndex;
         Hide();
 
         var polyomino = Polyominos.Get(polyominoIndex);
@@ -81,6 +85,7 @@ public class Block : MonoBehaviour
         transform.localScale = Vector3.one;
 
         currentDragPoint = Vector2Int.RoundToInt((Vector2)transform.position - center);
+        board.Hover(currentDragPoint,polyominoIndex);
         previousDragPoint = currentDragPoint;
 
         previousMousePosition = Input.mousePosition;
@@ -100,6 +105,7 @@ public class Block : MonoBehaviour
             if (currentDragPoint != previousDragPoint)
             {
                 previousDragPoint = currentDragPoint;
+                board.Hover(currentDragPoint,polyominoIndex);
             }
         }
     }
