@@ -5,6 +5,7 @@ public class Block : MonoBehaviour
     public const int Size = 5;
 
     [SerializeField] private Board board;
+    [SerializeField] private Blocks blocks;
     [SerializeField] private Cell cellPrefab;
 
     private int polyominoIndex;
@@ -112,10 +113,18 @@ public class Block : MonoBehaviour
 
     private void OnMouseUp()
     {
+        previousMousePosition = Vector3.positiveInfinity;
+
+        currentDragPoint = Vector2Int.RoundToInt((Vector2)transform.position - center);
+        if(board.Place(currentDragPoint, polyominoIndex) == true)
+        {
+            gameObject.SetActive(false);
+            blocks.Remove();
+        }
+
         transform.localPosition = position;
         transform.localScale = scale;
 
-        previousMousePosition = Vector3.positiveInfinity;
     }
 
 }
