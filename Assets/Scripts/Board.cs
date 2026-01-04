@@ -134,7 +134,7 @@ public class Board : MonoBehaviour
     {
         foreach(var hoverPoint in hoverPoints)
         {
-            data[hoverPoint.y, hoverPoint.x] = 1;
+            data[hoverPoint.y, hoverPoint.x] = 2;
             cells[hoverPoint.y, hoverPoint.x].Normal();
         }
 
@@ -335,11 +335,11 @@ public class Board : MonoBehaviour
         var polyominoRows = polyomino.GetLength(0);
         var polyominoColumns = polyomino.GetLength(1);
 
-        for (var r = 0; r< Size; ++r)
+        for (var r = 0; r<= Size; ++r)
         {
-            for (var c = 0; c< Size - polyominoColumns; ++c)
+            for (var c = 0; c<= Size - polyominoColumns; ++c)
             {
-                if(CheckPlace(c,r,polyominoColumns,polyominoRows,polyomino)==true)
+                if(CheckPlace(c,r,polyominoColumns,polyominoRows,polyomino))
                 {
                     return true;                
                 }
@@ -354,9 +354,16 @@ public class Board : MonoBehaviour
         {
             for (var c = 0; c< polyominoColumns; ++c)
             {
-                if(polyomino[r, c]> 0 && data[row+ r, column + c]==2)
+                if(polyomino[r, c]> 0)
                 {
-                    return false;                
+                    int checkY = row + r;
+                    int checkX = column + c;
+
+                    // Dizi sınırlarını kontrol et
+                    if (checkX < 0 || checkX >= Size || checkY < 0 || checkY >= Size) return false;
+                    
+                    // Eğer hedef hücre zaten doluysa (data == 2) yerleştirilemez
+                    if (data[checkY, checkX] == 2) return false;               
                 }
             }
         }

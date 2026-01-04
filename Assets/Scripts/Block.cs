@@ -55,7 +55,7 @@ public class Block : MonoBehaviour
         var polyominoColumns = polyomino.GetLength(1);
         center = new Vector2(polyominoColumns*0.5f, polyominoRows*0.5f);
 
-        for(var r = 0; r < polyominoColumns; ++r)
+        for(var r = 0; r < polyominoRows; ++r)
         {
             for(var c = 0; c < polyominoColumns; ++c)
             {
